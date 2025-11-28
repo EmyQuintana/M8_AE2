@@ -1,0 +1,60 @@
+:root {
+    --color-azul-pro: #0d47a1;     /* Azul fuerte para Navbar/Footer */
+    --color-gris-fondo: #f4f6f9;   /* Gris muy suave para el fondo */
+    --color-magenta: #d63384;      /* Magenta para detalles */
+    --color-magenta-dark: #a82365; /* Magenta oscuro para hover */
+}
+
+/* 1. Fondo General */
+body {
+    background-color: var(--color-gris-fondo);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 2. Estilos para Navbar y Footer (Azul) */
+.bg-azul-custom {
+    background-color: var(--color-azul-pro) !important;
+    color: white !important;
+}
+
+/*  textos del navbar y footer */
+.bg-azul-custom .navbar-brand, 
+.bg-azul-custom .nav-link, 
+.bg-azul-custom div, 
+.bg-azul-custom p {
+   color: rgb(241, 233, 233) !important; 
+    font-weight: 800; /* Opcional: las hace un poco más gruesas para que se lean mejor */
+}
+
+.bg-azul-custom .nav-link:hover {
+    color: var(--color-magenta) !important; /* Detalle magenta al pasar el mouse */
+}
+
+/* 3. Botones y Detalles (Magenta) */
+/* Sobreescribimos el botón primario de Bootstrap para no cambiar todo el HTML */
+.btn-primary {
+    background-color: var(--color-magenta) !important;
+    border-color: var(--color-magenta) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-magenta-dark) !important;
+    border-color: var(--color-magenta-dark) !important;
+}
+
+/* Enlaces generales en magenta */
+a {
+    color: var(--color-magenta);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--color-magenta-dark);
+    text-decoration: underline;
+}
+
+/* Tarjetas (Cards) más limpias */
+.card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}

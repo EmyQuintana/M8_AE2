@@ -17,3 +17,11 @@ class Evento(models.Model):
 
     def __str__(self):
         return self.titulo
+
+# --- PARA LA GALERÍA ---
+class FotoEvento(models.Model):
+    evento = models.ForeignKey(Evento, on_delete=models.CASCADE, related_name='fotos')
+    imagen = models.ImageField(upload_to='eventos_galeria/')
+    
+    def __str__(self):
+        return f"Foto de {self.evento.titulo}"
