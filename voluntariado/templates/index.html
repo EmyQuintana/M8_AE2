@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="jumbotron">
+        <h1 class="display-4">Bienvenido a Voluntariado</h1>
+        <p class="lead">Una aplicación para gestionar voluntarios y eventos de la ONG.</p>
+        <hr class="my-4">
+        <p>Organiza y participa en nuestros eventos comunitarios.</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'lista_voluntarios' %}" role="button">Ver Voluntarios</a>
+        <a class="btn btn-secondary btn-lg" href="{% url 'lista_eventos' %}" role="button">Ver Eventos</a>
+    </div>
+</div>
+{% endblock %}

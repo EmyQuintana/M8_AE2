@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ voluntario.nombre }}</h1>
+<p>Email: {{ voluntario.email }}</p>
+<p>Teléfono: {{ voluntario.telefono }}</p>
+<p>Fecha de Registro: {{ voluntario.fecha_registro }}</p>
+<a href="{% url 'lista_voluntarios' %}">Volver a la lista</a>
+{% endblock %}

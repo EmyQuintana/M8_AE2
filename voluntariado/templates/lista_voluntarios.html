@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Lista de Voluntarios</h1>
+<a href="{% url 'crear_voluntario' %}">Agregar Voluntario</a>
+<ul>
+    {% for voluntario in voluntarios %}
+    <li>
+        <a href="{% url 'detalle_voluntario' pk=voluntario.pk %}">{{ voluntario.nombre }}</a>
+        <a href="{% url 'editar_voluntario' pk=voluntario.pk %}">Editar</a>
+        <a href="{% url 'eliminar_voluntario' pk=voluntario.pk %}">Eliminar</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
