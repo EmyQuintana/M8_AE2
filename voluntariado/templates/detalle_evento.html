@@ -6,26 +6,53 @@
         <a href="{% url 'lista_eventos' %}" class="btn btn-outline-secondary">← Volver a Eventos</a>
         
         <div class="btn-group">
+            {% if perms.voluntariado.change_evento %}
             <a href="{% url 'editar_evento' pk=evento.pk %}" class="btn btn-warning">Editar Evento</a>
+            {% endif %}
+            
+            {% if perms.voluntariado.delete_evento %}
             <a href="{% url 'eliminar_evento' pk=evento.pk %}" class="btn btn-danger">Eliminar</a>
+            {% endif %}
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-8">
             <div class="card shadow-sm mb-4">
+                
                 {% if evento.fotos.first %}
-                <img src="{{ evento.fotos.first.imagen.url }}" class="card-img-top" alt="{{ evento.titulo }}" style="height: 400px; object-fit: cover;">
+                    <img src="{{ evento.fotos.first.imagen.url }}" class="card-img-top" alt="{{ evento.titulo }}" style="height: 400px; object-fit: cover;">
                 {% else %}
-                <div class="bg-light text-center py-5">
-                    <span style="font-size: 80px;">📷</span>
-                    <p class="text-muted">Sin foto de portada</p>
-                </div>
+                    <div class="bg-light text-center py-5">
+                        <span style="font-size: 80px;">📷</span>
+                        <p class="text-muted">Sin foto de portada</p>
+                    </div>
                 {% endif %}
 
                 <div class="card-body">
                     <h1 class="card-title text-primary fw-bold mb-3">{{ evento.titulo }}</h1>
-                    <h5 class="text-muted mb-3">📅 Fecha: {{ evento.fecha|date:"l d \d\e F, Y" }}</h5>
+                    
+                    <div class="d-flex gap-4 mb-3 text-muted align-items-center flex-wrap">
+                        <div>
+                            <span class="fs-5">📅</span> 
+                            <strong>Fecha:</strong> {{ evento.fecha|date:"d \d\e F, Y" }}
+                        </div>
+                        <div>
+                            <span class="fs-5">👥</span> 
+                            <strong>Aforo:</strong> {{ evento.voluntarios.count }} / {{ evento.aforo }} cupos ocupados
+                        </div>
+                    </div>
+
+                    <div class="progress mb-4" style="height: 10px;">
+                        <div class="progress-bar {% if evento.voluntarios.count >= evento.aforo %}bg-danger{% else %}bg-success{% endif %}" 
+                             role="progressbar" 
+                             style="width: {% widthratio evento.voluntarios.count evento.aforo 100 %}%;" 
+                             aria-valuenow="{{ evento.voluntarios.count }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="{{ evento.aforo }}">
+                        </div>
+                    </div>
+
                     <hr>
                     <h5 class="fw-bold">Descripción</h5>
                     <p class="card-text lead" style="white-space: pre-line;">{{ evento.descripcion }}</p>
@@ -35,30 +62,40 @@
 
         <div class="col-md-4">
             <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">Voluntarios Inscritos ({{ evento.voluntarios.count }})</h5>
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Voluntarios</h5>
+                    <span class="badge bg-white text-success rounded-pill">{{ evento.voluntarios.count }}</span>
                 </div>
-                <ul class="list-group list-group-flush">
+                
+                <ul class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
                     {% for voluntario in evento.voluntarios.all %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center text-truncate">
                             {% if voluntario.foto %}
-                                <img src="{{ voluntario.foto.url }}" class="rounded-circle me-2" width="30" height="30" style="object-fit: cover;">
+                                <img src="{{ voluntario.foto.url }}" class="rounded-circle me-2 border" width="35" height="35" style="object-fit: cover;">
                             {% else %}
-                                <span class="me-2">👤</span>
+                                <span class="me-2 fs-4 text-secondary">👤</span>
                             {% endif %}
-                            {{ voluntario.nombre }}
+                            
+                            <span class="text-truncate" style="max-width: 150px;">{{ voluntario.nombre }}</span>
                         </div>
-                        <a href="{% url 'detalle_voluntario' pk=voluntario.pk %}" class="btn btn-sm btn-outline-info">Ver</a>
+                        <a href="{% url 'detalle_voluntario' pk=voluntario.pk %}" class="btn btn-sm btn-outline-info" title="Ver perfil">Ver</a>
                     </li>
                     {% empty %}
-                    <li class="list-group-item text-muted text-center py-3">
-                        No hay voluntarios inscritos aún.
+                    <li class="list-group-item text-muted text-center py-4">
+                        <p class="mb-0">No hay voluntarios inscritos.</p>
                     </li>
                     {% endfor %}
                 </ul>
-                <div class="card-footer bg-white border-top-0 text-center">
-                    <small class="text-muted">Para agregar voluntarios, edita el evento.</small>
+
+                {% if evento.voluntarios.count >= evento.aforo %}
+                <div class="alert alert-danger m-0 rounded-0 text-center small border-top">
+                    ⚠️ <strong>¡Evento Lleno!</strong> No quedan cupos.
+                </div>
+                {% endif %}
+
+                <div class="card-footer bg-white text-center">
+                    <small class="text-muted">Gestiona la lista en "Editar Evento".</small>
                 </div>
             </div>
         </div>

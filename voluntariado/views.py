@@ -3,6 +3,8 @@ from django.contrib import messages  # Para feedback al usuario
 from django.db import transaction, IntegrityError # Para seguridad en base de datos
 from .forms import VoluntarioForm, EventoForm
 from .models import Voluntario, Evento, FotoEvento
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required, permission_required
 
 def index(request):
     return render(request, 'index.html')
@@ -18,6 +20,7 @@ def detalle_voluntario(request, pk):
     voluntario = get_object_or_404(Voluntario, pk=pk)
     return render(request, 'detalle_voluntario.html', {'voluntario': voluntario})
 
+@permission_required('voluntariado.add_voluntario') # Solo usuarios con permiso de "Agregar"
 def crear_voluntario(request):
     if request.method == 'POST':
         form = VoluntarioForm(request.POST, request.FILES)
@@ -36,6 +39,7 @@ def crear_voluntario(request):
         form = VoluntarioForm()
     return render(request, 'crear_voluntario.html', {'form': form})
 
+@permission_required('voluntariado.change_voluntario') # Solo usuarios con permiso de "Cambiar/Editar"
 def editar_voluntario(request, pk):
     voluntario = get_object_or_404(Voluntario, pk=pk)
     if request.method == 'POST':
@@ -54,6 +58,7 @@ def editar_voluntario(request, pk):
         form = VoluntarioForm(instance=voluntario)
     return render(request, 'editar_voluntario.html', {'form': form, 'voluntario': voluntario})
 
+@permission_required('voluntariado.delete_voluntario') # Solo Admin
 def eliminar_voluntario(request, pk):
     voluntario = get_object_or_404(Voluntario, pk=pk)
     if request.method == 'POST':
@@ -76,6 +81,7 @@ def detalle_evento(request, pk):
     evento = get_object_or_404(Evento, pk=pk)
     return render(request, 'detalle_evento.html', {'evento': evento})
 
+@permission_required('voluntariado.add_evento') # Solo quien pueda agregar
 def crear_evento(request):
     if request.method == 'POST':
         # AGREGAR request.FILES
@@ -95,6 +101,7 @@ def crear_evento(request):
         form = EventoForm()
     return render(request, 'crear_evento.html', {'form': form})
 
+@permission_required('voluntariado.change_evento') # Admin y Gestor
 def editar_evento(request, pk):
     evento = get_object_or_404(Evento, pk=pk)
     if request.method == 'POST':
@@ -115,6 +122,7 @@ def editar_evento(request, pk):
         form = EventoForm(instance=evento)
     return render(request, 'editar_evento.html', {'form': form, 'evento': evento})
 
+@permission_required('voluntariado.delete_evento') # Solo Admin
 def eliminar_evento(request, pk):
     evento = get_object_or_404(Evento, pk=pk)
     if request.method == 'POST':
@@ -122,3 +130,14 @@ def eliminar_evento(request, pk):
         messages.success(request, "Evento eliminado.")
         return redirect('lista_eventos')
     return render(request, 'eliminar_evento.html', {'evento': evento})
+
+def registro(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Cuenta creada exitosamente. ¡Ahora puedes iniciar sesión!")
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registro.html', {'form': form})

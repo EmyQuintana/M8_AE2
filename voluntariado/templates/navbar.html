@@ -5,13 +5,36 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'lista_voluntarios' %}">Voluntarios</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'lista_eventos' %}">Eventos</a>
                 </li>
+            </ul>
+            
+            <ul class="navbar-nav ms-auto align-items-center">
+                {% if user.is_authenticated %}
+                    <li class="nav-item me-3">
+                        <span class="text-white">Hola, <strong>{{ user.username|title }}</strong></span>
+                    </li>
+                    <li class="nav-item">
+                        <form action="{% url 'logout' %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-light text-primary fw-bold">
+                                Cerrar Sesión
+                            </button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item me-2">
+                        <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-sm btn-light text-primary fw-bold" href="{% url 'registro' %}">Registrarse</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>

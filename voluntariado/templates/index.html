@@ -2,14 +2,41 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="jumbotron p-5 rounded mb-4" style="background-color: #e9ecef;">
-        <h1 class="display-4 text-dark">Bienvenido a Voluntariado</h1>
-        <p class="lead text-dark">Una aplicación para gestionar voluntarios y eventos de la ONG.</p>
-        <hr class="my-4">
-        <p class="text-dark">Organiza y participa en nuestros eventos comunitarios.</p>
-        
-        <a class="btn btn-primary btn-lg" href="{% url 'lista_voluntarios' %}" role="button">Ver Voluntarios</a>
-        <a class="btn btn-secondary btn-lg" href="{% url 'lista_eventos' %}" role="button">Ver Eventos</a>
+    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm border">
+        <div class="container-fluid py-3">
+            <h1 class="display-5 fw-bold text-primary">Bienvenido a ONG Emy</h1>
+            <p class="col-md-8 fs-4 text-muted">Gestión integral de voluntarios y eventos deportivos para nuestra comunidad.</p>
+            
+            <hr class="my-4">
+
+            {% if user.is_authenticated %}
+                <div class="alert alert-success border-0 shadow-sm">
+                    <h4 class="alert-heading">¡Hola de nuevo, {{ user.username }}!</h4>
+                    <p>Tienes acceso al panel de gestión. ¿Qué deseas hacer hoy?</p>
+                </div>
+                
+                <div class="d-grid gap-3 d-md-flex mt-4">
+                    <a class="btn btn-primary btn-lg px-4 gap-3" href="{% url 'lista_eventos' %}">
+                        📅 Gestionar Eventos
+                    </a>
+                    <a class="btn btn-outline-secondary btn-lg px-4" href="{% url 'lista_voluntarios' %}">
+                        👥 Ver Voluntarios
+                    </a>
+                </div>
+
+            {% else %}
+                <p class="mb-4">Para acceder a las funciones de administración, editar eventos o gestionar voluntarios, por favor inicia sesión.</p>
+                
+                <div class="d-grid gap-3 d-md-flex justify-content-md-start">
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">
+                        Iniciar Sesión
+                    </a>
+                    <a href="{% url 'registro' %}" class="btn btn-outline-primary btn-lg px-4">
+                        Crear Cuenta
+                    </a>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

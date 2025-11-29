@@ -22,10 +22,11 @@ class EventoForm(forms.ModelForm):
 
     class Meta:
         model = Evento
-        fields = ['titulo', 'descripcion', 'fecha', 'voluntarios']
+        fields = ['titulo', 'descripcion', 'fecha', 'aforo', 'voluntarios']
         widgets = {
             'titulo': forms.TextInput(attrs={'class': 'form-control'}),
             'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'fecha': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'aforo': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
             'voluntarios': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
         }

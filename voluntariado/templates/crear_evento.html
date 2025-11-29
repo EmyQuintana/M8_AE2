@@ -5,7 +5,7 @@
     <div class="col-lg-8">
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">{% if evento %}Crear Evento{% else %}Crear Nuevo Evento{% endif %}</h4>
+                <h4 class="mb-0">Crear Nuevo Evento</h4>
             </div>
             <div class="card-body">
                 <form method="post" enctype="multipart/form-data" novalidate>
@@ -23,6 +23,11 @@
                             {{ form.fecha }}
                             {{ form.fecha.errors }}
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Cupos Disponibles (Aforo)</label>
+                            {{ form.aforo }}
+                            {{ form.aforo.errors }}
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -31,12 +36,39 @@
                         {{ form.descripcion.errors }}
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label fw-bold d-block mb-2">{{ form.voluntarios.label }}</label>
-                        <div class="card p-3 bg-light" style="max-height: 200px; overflow-y: auto;">
-                            {{ form.voluntarios }}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold d-block mb-2">
+                            Seleccionar Voluntarios:
+                        </label>
+                        
+                        <div class="card" style="max-height: 200px; overflow-y: auto;">
+                            <div class="list-group list-group-flush">
+                                
+                                {% for checkbox in form.voluntarios %}
+                                <label class="list-group-item list-group-item-action d-flex align-items-center px-3 py-2" style="cursor: pointer;">
+                                    <div class="me-3">
+                                        {{ checkbox.tag }}
+                                    </div>
+                                    <span class="fw-normal">{{ checkbox.choice_label }}</span>
+                                </label>
+                                {% endfor %}
+
+                            </div>
                         </div>
-                        <div class="form-text text-muted">Selecciona los voluntarios que participarán.</div>
+                        <div class="form-text text-muted mt-1">
+                            <small>🔽 Baja con el scroll para ver más voluntarios.</small>
+                        </div>
+                        {{ form.voluntarios.errors }}
+                    </div>
+
+                    <div class="mb-4 border-top pt-3">
+                        <label class="form-label fw-bold text-primary">
+                            📷 Foto de Portada
+                        </label>
+                        {{ form.foto_portada }}
+                        {% if form.foto_portada.errors %}
+                            <div class="text-danger small">{{ form.foto_portada.errors }}</div>
+                        {% endif %}
                     </div>
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end border-top pt-3">

@@ -21,6 +21,8 @@ class Evento(models.Model):
     titulo = models.CharField(max_length=255, verbose_name="Título del Evento")
     descripcion = models.TextField(verbose_name="Descripción")
     fecha = models.DateField(verbose_name="Fecha del Evento")
+    #PARA VER AFOROS DE CADA EVENTO 
+    aforo = models.PositiveIntegerField(default=10, verbose_name="Aforo Máximo")
     # related_name='eventos' permite acceder desde Voluntario así: voluntario.eventos.all()
     voluntarios = models.ManyToManyField(Voluntario, related_name="eventos", blank=True)
 
