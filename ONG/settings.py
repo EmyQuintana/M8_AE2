@@ -118,5 +118,6 @@ LOGIN_REDIRECT_URL = 'index'
 
 # Redirección después de cerrar sesión (va al login otra vez)
 LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

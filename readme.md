@@ -1,30 +1,36 @@
 # 🤝 Plataforma de Gestión de Voluntariado ONG
 
-Este proyecto es una aplicación web desarrollada en **Django** diseñada para una ONG que realiza eventos deportivos. Permite gestionar una base de datos de voluntarios, organizar eventos y asignar participantes a actividades específicas.
+Este proyecto es una aplicación web desarrollada en **Django** diseñada para una ONG que realiza eventos deportivos. Permite gestionar una base de datos de voluntarios, organizar eventos, controlar aforos y asignar participantes de manera eficiente.
 
-El sistema implementa un **CRUD completo** (Crear, Leer, Actualizar y Eliminar) y cuenta con mejoras visuales y funcionales como galerías de imágenes y un diseño personalizado.
+El sistema implementa un **CRUD completo** y cuenta con un sistema de **Roles y Permisos (ACL)**, mejoras de seguridad y una interfaz gráfica optimizada con Bootstrap 5.
 
 ---
-![Vista Principal de Eventos](static/img/Captura.JPG)
+![Vista Principal de Eventos](static/img/Captura2.JPG)
+---
+![Vista Principal de Eventos](static/img/Captura3.JPG)
 
-## 🚀 Características Principales
 
-### 1. Gestión de Datos (CRUD)
-* **Voluntarios:** Registro completo con validaciones (Email único, teléfono).
-* **Eventos:** Creación y edición de eventos con descripción y fechas.
-* **Asignación:** Relación "Muchos a Muchos" (`ManyToManyField`) que permite vincular múltiples voluntarios a distintos eventos.
+## 🚀 Nuevas Características (Refactorización M8)
 
-### 2. Galería de Imágenes (Mejora Técnica)
-Implementación utilizando **Pillow**:
-* **Fotos por Evento:** Posibilidad de subir múltiples imágenes a cada evento desde el panel de administración (`Inline Admin`).
-* **Optimización:** Conversión automática de formatos a `.jpg` al subir imágenes.
-* **Visualización:** Vista de tarjetas ("Cards") en el listado de eventos con imagen de portada.
+### 1. Gestión Avanzada de Eventos y Aforo
+* **Control de Capacidad:** Nuevo campo `aforo` en los eventos.
+* **Visualización en Tiempo Real:** Barra de progreso dinámica que muestra el porcentaje de ocupación (verde/roja según disponibilidad).
+* **Galería Integrada:** Soporte para subir fotos de portada directamente desde el formulario de creación/edición.
 
-### 3. Diseño e Interfaz
-Personalización visual sobre Bootstrap 5:
-* **Tema Visual:** Paleta de colores personalizada (Azul Profesional para navegación, Magenta para acciones y Gris Claro para fondos).
-* **Responsive:** Diseño adaptable a dispositivos móviles.
-* **Feedback:** Mensajes de alerta y confirmación de eliminación.
+### 2. Seguridad y Control de Acceso (ACL)
+Implementación robusta de permisos basada en roles de usuario:
+* **Administrador:** Acceso total (Crear, Editar, Eliminar eventos y voluntarios).
+* **Gestor:** Acceso limitado a la gestión operativa (Crear y Editar, pero **sin permiso de eliminar**).
+* **Voluntario/Visitante:** Acceso de solo lectura o restringido.
+* **Protección de Vistas:** Uso de decoradores `@permission_required` y `@login_required` para blindar las URLs.
+* **Interfaz Condicional:** Los botones de "Editar" o "Eliminar" se ocultan automáticamente si el usuario no tiene permisos.
+
+### 3. Refactorización de Código (Buenas Prácticas)
+Se optimizó el código fuente para mejorar la mantenibilidad y robustez:
+* **Transacciones Atómicas:** Uso de `transaction.atomic()` en las vistas para asegurar la integridad de la base de datos al guardar eventos y fotos simultáneamente.
+* **Feedback al Usuario:** Implementación del framework de `messages` para alertas de éxito o error (Toasts/Alerts).
+* **Manejo de Errores:** Uso de `get_object_or_404` para prevenir errores de servidor (500).
+* **Widgets en Formularios:** Centralización de estilos CSS en `forms.py`, limpiando el código HTML de los templates.
 
 ---
 
@@ -34,53 +40,35 @@ Personalización visual sobre Bootstrap 5:
 * **Framework:** Django 5.2.8
 * **Base de Datos:** SQLite3
 * **Frontend:** HTML5, CSS3, Bootstrap 5.3
-* **Librerías Extra:** `Pillow` (Procesamiento de Imágenes)
+* **Gestión de Archivos:** Pillow (Imágenes de perfil y portadas)
+* **Control de Versiones:** Git & GitHub
 
 ---
 
-## 📝 Informe de Desarrollo
+## 📝 Informe de Desarrollo y Mejoras
 
-A continuación se detallan los pasos realizados para la construcción del sistema:
+### 1. Modelado de Datos (Actualizado)
+* **`Voluntario`:** Se agregó campo `foto` para perfil e identificación visual en listas.
+* **`Evento`:** Se agregó campo `aforo` (Integer) y validación de fechas.
+* **`FotoEvento`:** Modelo relacional para manejo de galería.
 
-### 1. Inicio del Proyecto
-Se inicializó el proyecto `ONG` y la aplicación `voluntariado`, que actúa como el núcleo del sistema de gestión.
-
-### 2. Modelado de Datos
-Se definieron los modelos en `models.py`:
-* **`Voluntario`:** Almacena datos personales y fecha de registro.
-* **`Evento`:** Almacena detalles de la actividad.
-* **`FotoEvento`:** Modelo adicional para gestionar la galería de imágenes vinculada a los eventos.
+### 2. Interfaz de Usuario (UI/UX)
+* **Listas Inteligentes:** Se reemplazaron las listas básicas por tablas responsivas y tarjetas ("Cards") con imágenes.
+* **Formularios Amigables:**
+    * Implementación de **cajas con scroll** para la selección de voluntarios (evita listas infinitas).
+    * Áreas de clic ampliadas para selección múltiple.
+* **Navbar Dinámica:** Muestra opciones de "Iniciar Sesión" o "Cerrar Sesión" (con nombre de usuario) según el estado de autenticación.
 
 ### 3. Panel de Administración
-Se configuró `admin.py` para gestionar los datos. Se implementó `FotoEventoInline` para permitir la carga de imágenes directamente dentro de la ficha de edición del evento.
+* Configuración de grupos **"Gestores"** y **"Administradores"** con permisos granulares desde el `/admin` de Django.
 
-### 4. Formularios
-Se utilizaron `ModelForm` en `forms.py` para generar formularios automáticos, integrando selectores de fecha (`DateInput`) y checkboxes para la asignación de voluntarios.
+## 📍 Mapa de Rutas (Endpoints Principales)
 
-### 5. Vistas y Controladores
-En `views.py` se implementó la lógica para todas las operaciones CRUD, incluyendo la validación de formularios y el manejo de subida de archivos multimedia.
-
-### 6. Seguridad
-* **CSRF:** Protección en todos los formularios mediante `{% csrf_token %}`.
-* **Validación:** Control de integridad de datos en modelos y formularios.
-
-
-## 📍 Mapa de Rutas (Endpoints)
-
-La aplicación cuenta con las siguientes rutas de acceso para gestionar el contenido:
-
-### Voluntarios
-* **Listar:** `/voluntarios/` - Ver todos los registros.
-* **Detalle:** `/voluntarios/<id>/` - Ver ficha completa.
-* **Crear:** `/voluntarios/crear/` - Registrar nuevo voluntario.
-* **Editar:** `/voluntarios/editar/<id>/` - Modificar datos.
-* **Eliminar:** `/voluntarios/eliminar/<id>/` - Borrar registro.
-
-### Eventos
-* **Listar:** `/eventos/` - Ver tarjetas de eventos con fotos.
-* **Detalle:** `/eventos/<id>/` - Ver información y galería.
-* **Crear:** `/eventos/crear/` - Agendar nuevo evento.
-* **Editar:** `/eventos/editar/<id>/` - Modificar evento.
-* **Eliminar:** `/eventos/eliminar/<id>/` - Cancelar evento.
-
----
+| Módulo | Acción | Ruta | Permiso Requerido |
+| :--- | :--- | :--- | :--- |
+| **Auth** | Login | `/login/` | Público |
+| **Auth** | Registro | `/registro/` | Público |
+| **Eventos** | Listar | `/eventos/` | Público |
+| **Eventos** | Crear | `/eventos/crear/` | `add_evento` (Gestor/Admin) |
+| **Eventos** | Editar | `/eventos/editar/<id>/` | `change_evento` (Gestor/Admin) |
+| **Eventos** | Eliminar | `/eventos/eliminar/<id>/` |

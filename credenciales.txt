@@ -1,0 +1,7 @@
+GESTOR:
+Usuario: felipe_gestor
+Clave: gestor123
+
+ADMINISTRADOR:
+Usuario: ADMINISTRADOR (minuscula)
+Calve: root123
