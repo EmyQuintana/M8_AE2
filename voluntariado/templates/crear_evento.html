@@ -1,10 +1,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Crear Evento</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar</button>
-</form>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{% if evento %}Crear Evento{% else %}Crear Nuevo Evento{% endif %}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label class="form-label fw-bold">{{ form.titulo.label }}</label>
+                            {{ form.titulo }}
+                            {{ form.titulo.errors }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">{{ form.fecha.label }}</label>
+                            {{ form.fecha }}
+                            {{ form.fecha.errors }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">{{ form.descripcion.label }}</label>
+                        {{ form.descripcion }}
+                        {{ form.descripcion.errors }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold d-block mb-2">{{ form.voluntarios.label }}</label>
+                        <div class="card p-3 bg-light" style="max-height: 200px; overflow-y: auto;">
+                            {{ form.voluntarios }}
+                        </div>
+                        <div class="form-text text-muted">Selecciona los voluntarios que participarán.</div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end border-top pt-3">
+                        <a href="{% url 'lista_eventos' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-save"></i> Guardar Evento
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

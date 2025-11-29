@@ -1,10 +1,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Editar Evento</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar</button>
-</form>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Editar Evento</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Título del Evento</label>
+                        {{ form.titulo }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Descripción</label>
+                        {{ form.descripcion }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Fecha</label>
+                        {{ form.fecha }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Seleccionar Voluntarios:</label>
+                        <div class="card p-3 bg-light" style="max-height: 150px; overflow-y: auto;">
+                            {{ form.voluntarios }}
+                        </div>
+                        <div class="form-text text-muted">Baja con el scroll para ver todos.</div>
+                    </div>
+
+                    <div class="mb-4 border-top pt-3">
+                        <label class="form-label fw-bold text-primary">
+                            📷 Foto de Portada
+                        </label>
+                        {{ form.foto_portada }}
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'lista_eventos' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
